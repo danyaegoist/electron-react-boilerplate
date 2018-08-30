@@ -10,8 +10,10 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
+import processWindows from 'node-process-windows';
+import cmd from 'node-cmd';
 
 let mainWindow = null;
 
@@ -62,8 +64,13 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728
+    width: 750,
+    height: 600,
+    minWidth: 750,
+    minHeight: 600,
+    frame: false,
+    resizable: true,
+    transparent: true
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -82,10 +89,97 @@ app.on('ready', async () => {
     }
   });
 
+  ipcMain.on('app:close', function(e) {
+    mainWindow.close();
+  });
+  ipcMain.on('app:minimize', function(e) {
+    mainWindow.minimize();
+  });
+  ipcMain.on('app:maximize', function(e) {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // menuBuilder.buildMenu();
+
+  //WoTLauncher.exe
+  //WorldOfTanks.exe
+
+  var seekTimeId = null;
+  var updated = false;
+  var laucherWasLaunched = false;
+  var gameWasLaunched = false;
+  var tempLauncherFlag = false;
+  var tempGameFlag = false;
+  var gameId = null;
+
+  function seek() {
+    //search for apps
+    var activeProcesses = processWindows.getProcesses(function(err, processes) {
+      tempGameFlag = false;
+
+      processes.forEach(function(p) {
+        //console.log(p);
+        // if(p.processName == "WoTLauncher"){
+        //   console.log('laucher found');
+        //   tempLauncherFlag = true;
+        // }
+        if (p.processName == 'WorldOfTanks') {
+          console.log('game found');
+          tempGameFlag = true;
+          gameId = p.pid;
+        }
+      });
+
+      if (tempGameFlag) {
+        console.log('initialize app');
+        //update
+        cmd.get('TASKKILL /PID ' + gameId + ' /F', function(
+          err,
+          stdin,
+          stdout
+        ) {
+          console.log(err, stdin, stdout);
+          mainWindow.show();
+          mainWindow.focus();
+        });
+        // process.kill(gameId);
+      } else if (!tempGameFlag && !tempLauncherFlag) {
+        console.log('game is exit');
+        //reset updater
+      } else {
+        console.log('accord not found');
+      }
+
+      laucherWasLaunched = tempLauncherFlag;
+      gameWasLaunched = tempGameFlag;
+      gameId = null;
+      seekTimeId = setTimeout(seek, 100);
+    });
+  }
+
+  mainWindow.on('restore', function(e) {
+    console.log('game was restored');
+    clearInterval(seekTimeId);
+    laucherWasLaunched = false;
+    gameWasLaunched = false;
+  });
+
+  mainWindow.on('minimize', function(e) {
+    console.log('game was minimized');
+    seek();
+  });
+  // processWindows.getProcesses(function(err, processes) {
+  //   processes.forEach(function (p) {
+  //     console.log(p);
+  //   });
+  // });
 });

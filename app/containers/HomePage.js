@@ -1,13 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import Home from '../components/Home';
+import styles from './HomePage.scss';
 
-type Props = {};
-
-export default class HomePage extends Component<Props> {
-  props: Props;
-
+export default class HomePage extends Component {
   render() {
-    return <Home />;
+    return <div className={styles.bodyContainer}>123</div>;
   }
 }

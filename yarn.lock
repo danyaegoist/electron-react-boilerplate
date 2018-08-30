@@ -6984,6 +6984,10 @@ node-pre-gyp@^0.10.0:
     semver "^5.3.0"
     tar "^4"
 
+node-process-windows@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/node-process-windows/-/node-process-windows-0.0.2.tgz#de5152d39eca983979cb3c3966fcff656f266bc6"
+
 node-releases@^1.0.0-alpha.10:
   version "1.0.0-alpha.10"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.0.0-alpha.10.tgz#61c8d5f9b5b2e05d84eba941d05b6f5202f68a2a"

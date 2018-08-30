@@ -1,0 +1,58 @@
+.appHeader {
+  -webkit-app-region: drag;
+  width: 100%;
+  height: 40px;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#241711+0,37302f+100 */
+  background: #241711; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    #241711 0%,
+    #37302f 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    #241711 0%,
+    #37302f 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #241711 0%,
+    #37302f 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#241711', endColorstr='#37302f',GradientType=0 ); /* IE6-9 */
+  position: relative;
+}
+.appHeader * {
+  -webkit-app-region: no-drag;
+}
+.buttonsContainer {
+  right: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.icon {
+  width: 28px;
+  height: 22px;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  padding: 5px;
+}
+.icon img {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.icon:hover,
+.icon:active,
+.icon:focus {
+  background-color: #37302f;
+}
+.minimize {
+}
+.maximize {
+}
+.close {
+}
